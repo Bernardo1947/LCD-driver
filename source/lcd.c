@@ -36,14 +36,35 @@ void lcd_clear(void) {
 }
 
 
-void lcd_command(unsigned char byte) {
-    LCD_RS = 0;
-    lcd_send_data(byte);
+void lcd_cursor_on(void) {
+    lcd_command(LCD_CURSOR_ON);
 }
 
 
-void lcd_clear(void) {
-    lcd_command(LCD_CLEAR);
+void lcd_cursor_off(void) {
+    lcd_command(LCD_CURSOR_OFF);
+}
+
+
+void lcd_cursor_blink_off(void) {
+    lcd_command(LCD_CURSOR_BLINK_OFF);
+}
+
+
+void lcd_cursor_blink_on(void) {
+    lcd_command(LCD_CURSOR_BLINK_ON);
+}
+
+
+void shift_cursor_left(int amount) {
+    while (amount--)
+        lcd_command(LCD_CURSOR_LEFT);
+}
+
+
+void shift_cursor_right(int amount) {
+    while (amount--)
+        lcd_command(LCD_CURSOR_RIGHT);
 }
 
 

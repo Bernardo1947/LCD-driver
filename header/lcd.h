@@ -36,10 +36,23 @@
 #define LCD_SET_ENTRY_MOD                           (unsigned char) 0x06
 #define LCD_SHIFT_RIGHT                             (unsigned char) 0x1C
 #define LCD_SHIFT_LEFT                              (unsigned char) 0x18
+#define LCD_CURSOR_ON                               (unsigned char) 0x0F
+#define LCD_CURSOR_OFF                              (unsigned char) 0x0C
+#define LCD_CURSOR_RIGHT                            (unsigned char) 0x14
+#define LCD_CURSOR_LEFT                             (unsigned char) 0x10
+#define LCD_CURSOR_BLINK_OFF                        (unsigned char) 0x0E
+#define LCD_CURSOR_BLINK_ON                         (unsigned char) 0x0F
+
 
 
 void lcd_init(void);
 void lcd_clear(void);
+void lcd_cursor_on(void);
+void lcd_cursor_blink_off(void);
+void lcd_cursor_blink_on(void);
+void lcd_cursor_off(void);
+void shift_cursor_left(int);
+void shift_cursor_right(int);
 void lcd_set_position(int, int);
 int lcd_write_str(char *);
 int lcd_write_char(unsigned char);
