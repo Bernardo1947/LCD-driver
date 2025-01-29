@@ -13,6 +13,7 @@
 
 
 void lcd_init(void) {
+    /* Disable AD channel in order to PORTE pins work as GPIO */
     ADCON1 = 0x06;
     TRISE = TRISD = 0;
     /* The busy state after initializing the LCD lasts for 15ms, so 20ms is used to ensure unexpected errors */
@@ -26,7 +27,12 @@ void lcd_init(void) {
     lcd_command(LCD_CLEAR);
     lcd_command(LCD_SET_ENTRY_MOD);
     lcd_command(LCD_DISPLAY_ON);
+    lcd_command(LCD_CURSOR_ON);
+}
 
+
+void lcd_clear(void) {
+    lcd_command(LCD_CLEAR);
 }
 
 
