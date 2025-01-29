@@ -1,3 +1,5 @@
 /main.c
 /Makefile
 /nbproject/
+build/
+dist/
