@@ -13,7 +13,7 @@ All the functions developed in the driver are described in details here:
 
 ### lcd_init()
 
-Initialize the LCD, setting it as 8-bit data and with 2 rows.
+Initialize the LCD, setting it as 8-bit data and with 2 rows. (Will be improved in the future to support more display's size and to support 4-bit format data too)
 
 # How to use this driver in any microcontroller
 
@@ -39,3 +39,6 @@ Initialize the LCD, setting it as 8-bit data and with 2 rows.
     ```
     #define LCD_PORT                                    <PORT_NAME>
     ```
+
+# Current commit's message
+
