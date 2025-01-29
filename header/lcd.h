@@ -31,20 +31,20 @@
 
 #define LCD_START                                   (unsigned char) 0x38
 #define LCD_CLEAR                                   (unsigned char) 0x01
-#define LCD_DISPLAY_OFF                             (unsigned char) 0x08
-#define LCD_DISPLAY_ON                              (unsigned char) 0x0F
+#define LCD_DISPLAY_OFF                             (unsigned char) 0x00
+#define LCD_DISPLAY_ON                              (unsigned char) 0x08
 #define LCD_SET_ENTRY_MOD                           (unsigned char) 0x06
 #define LCD_SHIFT_RIGHT                             (unsigned char) 0x1C
 #define LCD_SHIFT_LEFT                              (unsigned char) 0x18
 
 
 void lcd_init(void);
-void lcd_command(unsigned char);
 void lcd_clear(void);
 void lcd_set_position(int, int);
 int lcd_write_str(char *);
 int lcd_write_char(unsigned char);
 int lcd_write_int(int);
+static void lcd_command(unsigned char);
 static void lcd_send_data(unsigned char);
 
 #endif	/* LCD_H */

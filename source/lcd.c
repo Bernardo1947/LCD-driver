@@ -77,10 +77,16 @@ int lcd_write_char(unsigned char ch) {
 
 int lcd_write_int(int integer) {
     LCD_RS = 1;
-    char text[10];
+    char text[6];
     sprintf(text, "%d", integer);
     lcd_write_str(text);
     return integer;
+}
+
+
+static void lcd_command(unsigned char byte) {
+    LCD_RS = 0;
+    lcd_send_data(byte);
 }
 
 
