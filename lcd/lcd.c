@@ -12,12 +12,16 @@
 #include "lcd.h"
 
 
+/*
+ * @description:    Initialize the LCD, setting all the proper settings received
+ */
 void lcd_init(void) {
     /* Disable AD channel in order to PORTE pins work as GPIO */
     ADCON1 = 0x06;
     TRISE = TRISD = 0;
     /* The busy state after initializing the LCD lasts for 15ms, so 20ms is used to ensure unexpected errors */
     __delay_ms(20);
+    /* The following commands are defined in the LCD driver HD44780 for the properly initialization */
     lcd_command(LCD_START);
     __delay_ms(5);
     lcd_command(LCD_START);
@@ -31,43 +35,71 @@ void lcd_init(void) {
 }
 
 
+/*
+ * @description:    Clear the LCD current data displayed
+ */
 void lcd_clear(void) {
     lcd_command(LCD_CLEAR);
 }
 
 
+/*
+ * @description:    Turns on the cursor
+ */
 void lcd_cursor_on(void) {
     lcd_command(LCD_CURSOR_ON);
 }
 
 
+/*
+ * @description:    Turns off the cursor
+ */
 void lcd_cursor_off(void) {
     lcd_command(LCD_CURSOR_OFF);
 }
 
 
-void lcd_cursor_blink_off(void) {
-    lcd_command(LCD_CURSOR_BLINK_OFF);
-}
-
-
+/*
+ * @description:    Turns on the cursor blink
+ */
 void lcd_cursor_blink_on(void) {
     lcd_command(LCD_CURSOR_BLINK_ON);
 }
 
 
+/*
+ * @description:    Turns off the cursor blink
+ */
+void lcd_cursor_blink_off(void) {
+    lcd_command(LCD_CURSOR_BLINK_OFF);
+}
+
+
+/*
+ * @description:    Shift the cursor to the left by amount characters. Must be aware to move inside the LCD boundaries
+ * @params:         (int) amount - Amount of characters to be shifted to the left
+ */
 void shift_cursor_left(int amount) {
     while (amount--)
         lcd_command(LCD_CURSOR_LEFT);
 }
 
 
+/*
+ * @description:    Shift the cursor to the right by amount characters. Must be aware to move inside the LCD boundaries
+ * @params:         (int) amount            Amount of characters to be shifted to the right
+ */
 void shift_cursor_right(int amount) {
     while (amount--)
         lcd_command(LCD_CURSOR_RIGHT);
 }
 
 
+/*
+ * @description:    Set position on LCD. Restricted to the LCD boundaries
+ * @params:         (int) row               Row of the LCD (first row begins at 1)
+ *                  (int) column            Column of the LCD (first column begins at 1)
+ */
 void lcd_set_position(int row, int column) {
     if (row < 1 || row > 2)
         row = 1;
@@ -80,6 +112,11 @@ void lcd_set_position(int row, int column) {
 }
 
 
+/*
+ * @description:    Send a string to the LCD, starting from its current position
+ * @params :        (char*) str             String to be sent to the display
+ * @return:         Return an integer related to the amount of characters sent to the display
+ */
 int lcd_write_str(char *str) {
     LCD_RS = 1;
     int idx = 0;
@@ -89,6 +126,11 @@ int lcd_write_str(char *str) {
 }
 
 
+/*
+ * @description:    Send a character to the LCD
+ * @params :        (unsigned char) ch      Character to be sent to the display
+ * @return:         Returns the character sent in int form
+ */
 int lcd_write_char(unsigned char ch) {
     LCD_RS = 1;
     lcd_send_data(ch);
@@ -96,6 +138,12 @@ int lcd_write_char(unsigned char ch) {
 }
 
 
+/*
+ * @description:    Send an integer to the display. Be aware of this function usage, as it consumes more memory in
+ *                  limited devices
+ * @params :        (int) integer           Integer to be sent to the display
+ * @return:         Returns the integer sent
+ */
 int lcd_write_int(int integer) {
     LCD_RS = 1;
     char text[6];
@@ -105,12 +153,22 @@ int lcd_write_int(int integer) {
 }
 
 
+/*
+ * @description:    Execute a command from LCD's internal functions. RS pin must be 1 when the byte is sent. This
+ * function must not be used outside this file
+ * @params :        (unsigned char) byte    Command to be sent to the display. Usually one of the macros defined
+ */
 static void lcd_command(unsigned char byte) {
     LCD_RS = 0;
     lcd_send_data(byte);
 }
 
 
+/*
+ * @description:    Send a data byte to the LCD on the current position. RS pin must be 0 when the byte is sent. This
+ * function must not be used outside this file
+ * @params :        (unsigned char) byte    Data to be sent to the display
+ */
 static void lcd_send_data(unsigned char byte) {
     LCD_PORT = byte;
     LCD_EN = 1;
