@@ -29,7 +29,7 @@
 #define LCD_PORT                                    PORTD
 
 
-#define LCD_START                                   (unsigned char) 0x38
+#define                                             LCD_START(NP, NR, ND) (NP | NR | ND | 0x20)
 #define LCD_CLEAR                                   (unsigned char) 0x01
 #define LCD_DISPLAY_OFF                             (unsigned char) 0x00
 #define LCD_DISPLAY_ON                              (unsigned char) 0x08
@@ -43,9 +43,16 @@
 #define LCD_CURSOR_BLINK_OFF                        (unsigned char) 0x0E
 #define LCD_CURSOR_BLINK_ON                         (unsigned char) 0x0F
 
+#define DATA_LENGTH_8_PINS                          0x10
+#define DATA_LENGTH_4_PINS                          0x00
+#define DISPLAY_2_ROWS                              0x08
+#define DISPLAY_1_ROW                               0x00
+#define DOTS_10                                     0x04
+#define DOTS_8                                      0x00
 
 
-void lcd_init(void);
+
+void lcd_init(char, char, char);
 void lcd_clear(void);
 void lcd_cursor_on(void);
 void lcd_cursor_blink_off(void);
