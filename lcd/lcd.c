@@ -14,19 +14,30 @@
 
 /*
  * @description:    Initialize the LCD, setting all the proper settings received
+ * @params:         (char) pins - Number of pins used, receives 4 or 8. Default is 4 pins
+ *                  (char) rows - Number of rows used, 2 or 1. Default is 1 row
+ *                  (char) dots - Number of dots to be used on each character, may be 10 or 8. Default is 8 dots
+ *
  */
-void lcd_init(void) {
+static unsigned char data_length = 0;
+
+
+void lcd_init(char pins, char rows, char dots) {
+    /* Set the parameters according to the LCD driver */
+    data_length = pins == (char) 8 ? DATA_LENGTH_8_PINS : DATA_LENGTH_4_PINS;
+    char display_rows = rows == (char) 2 ? DISPLAY_2_ROWS : DISPLAY_1_ROW;
+    char dot_format = dots == (char) 10 ? DOTS_10 : DOTS_8;
     /* Disable AD channel in order to PORTE pins work as GPIO */
     ADCON1 = 0x06;
     TRISE = TRISD = 0;
     /* The busy state after initializing the LCD lasts for 15ms, so 20ms is used to ensure unexpected errors */
     __delay_ms(20);
     /* The following commands are defined in the LCD driver HD44780 for the properly initialization */
-    lcd_command(LCD_START);
+    lcd_command(LCD_START(data_length, display_rows, dot_format));
     __delay_ms(5);
-    lcd_command(LCD_START);
+    lcd_command(LCD_START(data_length, display_rows, dot_format));
     __delay_us(200);
-    lcd_command(LCD_START);
+    lcd_command(LCD_START(data_length, display_rows, dot_format));
     lcd_command(LCD_DISPLAY_OFF);
     lcd_command(LCD_CLEAR);
     lcd_command(LCD_SET_ENTRY_MOD);
