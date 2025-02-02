@@ -181,8 +181,21 @@ static void lcd_command(unsigned char byte) {
  * @params :        (unsigned char) byte    Data to be sent to the display
  */
 static void lcd_send_data(unsigned char byte) {
-    LCD_PORT = byte;
-    LCD_EN = 1;
-    __delay_us(2000);
-    LCD_EN = 0;
+    if (data_length == DATA_LENGTH_8_PINS) {
+        LCD_PORT = byte;
+        LCD_EN = 1;
+        __delay_us(2000);
+        LCD_EN = 0;
+    }
+    else {
+        LCD_PORT = byte & 0xF0;
+        LCD_EN = 1;
+        __delay_us(2000);
+        LCD_EN = 0;
+        __delay_us(100);
+        LCD_PORT = (byte << 4) & 0xF0;
+        LCD_EN = 1;
+        __delay_us(2000);
+        LCD_EN = 0;
+    }
 }
