@@ -7,8 +7,8 @@
  *
  * Only the instruction register (IR) and the data register (DR) can be controlled, so this driver only interface
  * with these two registers.
- * The signals sent to the internal LCD controller is determined by the signals from pins RS, (R/~W) and the data bus
- * (DB0 to DB7)
+ * The signals sent to the internal LCD controller is determined by the signals from pins RS, (R/~W), EN and the data
+ * bus (DB0 to DB7 or DB4 to DB7)
  *
  * There are four categories of instructions allowed by the LCD controller:
  *      Designate functions, sunch as display format, data length, etc.
@@ -24,6 +24,7 @@
 #define _XTAL_FREQ                                  4000000
 #endif
 
+#define LCD_RW                                      PORTEbits.RE0
 #define LCD_EN                                      PORTEbits.RE1
 #define LCD_RS                                      PORTEbits.RE2
 #define LCD_PORT                                    PORTD
@@ -51,8 +52,11 @@
 #define DOTS_8                                      0x00
 
 
+/* LCD initialization functions */
 
 void lcd_init(char, char, char);
+
+/* LCD display's settings functions */
 void lcd_clear(void);
 void lcd_cursor_on(void);
 void lcd_cursor_blink_off(void);
@@ -61,9 +65,13 @@ void lcd_cursor_off(void);
 void shift_cursor_left(int);
 void shift_cursor_right(int);
 void lcd_set_position(int, int);
+
+/* LCD display's data writing functions */
 int lcd_write_str(char *);
 int lcd_write_char(unsigned char);
 int lcd_write_int(int);
+
+/* Static functions to communicate with the LCD driver HD44780 */
 static void lcd_command(unsigned char);
 static void lcd_send_data(unsigned char);
 
