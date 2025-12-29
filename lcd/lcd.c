@@ -26,11 +26,14 @@ void lcd_init(char pins, char rows, char dots) {
     data_length = pins == (char) 8 ? DATA_LENGTH_8_PINS : DATA_LENGTH_4_PINS;
     char display_rows = rows == (char) 2 ? DISPLAY_2_ROWS : DISPLAY_1_ROW;
     char dot_format = dots == (char) 10 ? DOTS_10 : DOTS_8;
+
     /* Disable AD channel in order to PORTE pins work as GPIO */
     ADCON1 = 0x06;
-    TRISE = TRISD = 0;
+    LCD_DATA_PORT = LCD_CTRL_PORT = 0;
+    LCD_DATA_VALUE = LCD_CTRL_VALUE = 0;
+
     /* The busy state after initializing the LCD lasts for 15ms, so 20ms is used to ensure unexpected errors */
-    __delay_ms(20);
+    __delay_ms(50);
     /* The following commands are defined in the LCD driver HD44780 for the properly initialization */
     lcd_command(LCD_START(data_length, display_rows, dot_format));
     __delay_ms(5);
@@ -40,7 +43,7 @@ void lcd_init(char pins, char rows, char dots) {
     lcd_command(LCD_DISPLAY_OFF);
     lcd_command(LCD_CLEAR);
     lcd_command(LCD_SET_ENTRY_MOD);
-    lcd_command(LCD_DISPLAY_ON);
+    lcd_command(LCD_DISPLAY_OFF);
     lcd_command(LCD_CURSOR_ON);
 }
 
@@ -152,7 +155,7 @@ int lcd_write_int(int integer) {
 }
 
 /*
- * @description:    Execute a command from LCD's internal functions. RS pin must be 1 when the byte is sent. This
+ * @description:    Execute a command from LCD's internal functions. RS pin must be 0 when the byte is sent. This
  * function must not be used outside this file
  * @params :        (unsigned char) byte    Command to be sent to the display. Usually one of the macros defined
  */
@@ -169,17 +172,17 @@ static void lcd_command(unsigned char byte) {
  */
 static void lcd_send_data(unsigned char byte) {
     if (data_length == DATA_LENGTH_8_PINS) {
-        LCD_PORT = byte;
+        LCD_DATA_PORT = byte;
         LCD_EN = 1;
         __delay_us(2000);
         LCD_EN = 0;
     } else {
-        LCD_PORT = byte & 0xF0;
+        LCD_DATA_PORT = byte & 0xF0;
         LCD_EN = 1;
         __delay_us(2000);
         LCD_EN = 0;
         __delay_us(100);
-        LCD_PORT = (byte << 4) & 0xF0;
+        LCD_DATA_PORT = (byte << 4) & 0xF0;
         LCD_EN = 1;
         __delay_us(2000);
         LCD_EN = 0;
