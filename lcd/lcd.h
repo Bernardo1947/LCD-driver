@@ -26,7 +26,7 @@
 
 #define LCD_DATA_PORT                               PORTD
 #define LCD_DATA_VALUE                              TRISD
-#define LCD_CTRL_PORT                               TRISE
+#define LCD_CTRL_PORT                               PORTE
 #define LCD_CTRL_VALUE                              TRISE
 
 #define LCD_RW                                      PORTEbits.RE0
