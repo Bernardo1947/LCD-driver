@@ -33,17 +33,18 @@ void lcd_init(char pins, char rows, char dots) {
     LCD_DATA_VALUE = LCD_CTRL_VALUE = 0;
 
     /* The busy state after initializing the LCD lasts for 15ms, so 20ms is used to ensure unexpected errors */
-    __delay_ms(50);
+    __delay_ms(20);
     /* The following commands are defined in the LCD driver HD44780 for the properly initialization */
     lcd_command(LCD_START(data_length, display_rows, dot_format));
     __delay_ms(5);
     lcd_command(LCD_START(data_length, display_rows, dot_format));
     __delay_us(200);
     lcd_command(LCD_START(data_length, display_rows, dot_format));
+
     lcd_command(LCD_DISPLAY_OFF);
     lcd_command(LCD_CLEAR);
+    __delay_ms(2);
     lcd_command(LCD_SET_ENTRY_MOD);
-    lcd_command(LCD_DISPLAY_OFF);
     lcd_command(LCD_DISPLAY_ON_CURSOR_ON);
 }
 
@@ -52,6 +53,7 @@ void lcd_init(char pins, char rows, char dots) {
  */
 void lcd_clear(void) {
     lcd_command(LCD_CLEAR);
+    __delay_ms(2);
 }
 
 /*
