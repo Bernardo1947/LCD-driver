@@ -37,11 +37,10 @@
 #define                                             LCD_START(NP, NR, ND) (NP | NR | ND | 0x20)
 #define LCD_CLEAR                                   (unsigned char) 0x01
 #define LCD_RETURN_HOME                             (unsigned char) 0x02
-#define LCD_DISPLAY_OFF                             (unsigned char) 0x00
-#define LCD_DISPLAY_ON                              (unsigned char) 0x08
-#define LCD_CURSOR_OFF                              (unsigned char) 0x0C
-#define LCD_CURSOR_ON_BLINK_OFF                     (unsigned char) 0x0E
-#define LCD_CURSOR_ON_BLINK_ON                      (unsigned char) 0x0F
+#define LCD_DISPLAY_OFF                             (unsigned char) 0x08
+#define LCD_DISPLAY_ON_CURSOR_OFF                   (unsigned char) 0x0C
+#define LCD_DISPLAY_ON_CURSOR_ON                    (unsigned char) 0x0E
+#define LCD_DISPLAY_ON_CURSOR_BLINK                 (unsigned char) 0x0F
 #define LCD_SET_ENTRY_MOD                           (unsigned char) 0x06
 #define LCD_SHIFT_RIGHT                             (unsigned char) 0x1C
 #define LCD_SHIFT_LEFT                              (unsigned char) 0x18

@@ -72,14 +72,14 @@ void lcd_cursor_off(void) {
  * @description:    Turns on the cursor blink
  */
 void lcd_cursor_blink_on(void) {
-    lcd_command(LCD_CURSOR_ON_BLINK_ON);
+    lcd_command(LCD_DISPLAY_ON_CURSOR_BLINK);
 }
 
 /*
  * @description:    Turns off the cursor blink
  */
 void lcd_cursor_blink_off(void) {
-    lcd_command(LCD_CURSOR_ON_BLINK_OFF);
+    lcd_command(LCD_DISPLAY_ON_CURSOR_ON);
 }
 
 /*
@@ -166,8 +166,7 @@ static void lcd_command(unsigned char byte) {
 }
 
 /*
- * @description:    Send a data byte to the LCD on the current position. RS pin must be 0 when the byte is sent. This
- * function must not be used outside this file
+ * @description:    Send a data byte to the LCD on the current position. RS pin must be 1 when the byte is sent. * This function must not be used outside this file
  * @params :        (unsigned char) byte    Data to be sent to the display or to execute a command
  */
 static void lcd_send_data(unsigned char byte) {
