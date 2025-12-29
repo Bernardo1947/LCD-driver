@@ -72,14 +72,14 @@ void lcd_cursor_off(void) {
  * @description:    Turns on the cursor blink
  */
 void lcd_cursor_blink_on(void) {
-    lcd_command(LCD_CURSOR_BLINK_ON);
+    lcd_command(LCD_CURSOR_ON_BLINK_ON);
 }
 
 /*
  * @description:    Turns off the cursor blink
  */
 void lcd_cursor_blink_off(void) {
-    lcd_command(LCD_CURSOR_BLINK_OFF);
+    lcd_command(LCD_CURSOR_ON_BLINK_OFF);
 }
 
 /*
