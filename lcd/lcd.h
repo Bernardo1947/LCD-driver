@@ -44,8 +44,6 @@
 #define LCD_SET_ENTRY_MOD                           (unsigned char) 0x06
 #define LCD_SHIFT_RIGHT                             (unsigned char) 0x1C
 #define LCD_SHIFT_LEFT                              (unsigned char) 0x18
-#define LCD_CURSOR_ON                               (unsigned char) 0x0F
-#define LCD_CURSOR_OFF                              (unsigned char) 0x0C
 #define LCD_CURSOR_RIGHT                            (unsigned char) 0x14
 #define LCD_CURSOR_LEFT                             (unsigned char) 0x10
 

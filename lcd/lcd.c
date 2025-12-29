@@ -44,7 +44,7 @@ void lcd_init(char pins, char rows, char dots) {
     lcd_command(LCD_CLEAR);
     lcd_command(LCD_SET_ENTRY_MOD);
     lcd_command(LCD_DISPLAY_OFF);
-    lcd_command(LCD_CURSOR_ON);
+    lcd_command(LCD_DISPLAY_ON_CURSOR_ON);
 }
 
 /*
@@ -58,14 +58,14 @@ void lcd_clear(void) {
  * @description:    Turns on the cursor
  */
 void lcd_cursor_on(void) {
-    lcd_command(LCD_CURSOR_ON);
+    lcd_command(LCD_DISPLAY_ON_CURSOR_ON);
 }
 
 /*
  * @description:    Turns off the cursor
  */
 void lcd_cursor_off(void) {
-    lcd_command(LCD_CURSOR_OFF);
+    lcd_command(LCD_DISPLAY_ON_CURSOR_OFF);
 }
 
 /*
@@ -173,17 +173,17 @@ static void lcd_send_data(unsigned char byte) {
     if (data_length == DATA_LENGTH_8_PINS) {
         LCD_DATA_PORT = byte;
         LCD_EN = 1;
-        __delay_us(2000);
+        __delay_us(40);
         LCD_EN = 0;
     } else {
         LCD_DATA_PORT = byte & 0xF0;
         LCD_EN = 1;
-        __delay_us(2000);
+        __delay_us(40);
         LCD_EN = 0;
         __delay_us(100);
         LCD_DATA_PORT = (byte << 4) & 0xF0;
         LCD_EN = 1;
-        __delay_us(2000);
+        __delay_us(40);
         LCD_EN = 0;
     }
 }
