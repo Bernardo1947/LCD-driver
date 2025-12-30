@@ -74,9 +74,5 @@ int lcd_write_str(char *);
 int lcd_write_char(unsigned char);
 int lcd_write_int(int);
 
-/* Static functions to communicate with the LCD driver HD44780 */
-static void lcd_command(unsigned char);
-static void lcd_send_data(unsigned char);
-
 #endif	/* LCD_H */
 

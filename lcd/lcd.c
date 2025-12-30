@@ -11,6 +11,10 @@
 
 #include "lcd.h"
 
+/* Static functions to communicate with the LCD driver HD44780 */
+static void lcd_command(unsigned char);
+static void lcd_send_data(unsigned char);
+static void lcd_send_nibble(unsigned char nibble);
 
 /*
  * @description:    Initialize the LCD, setting all the proper settings received
@@ -20,6 +24,7 @@
  *
  */
 static unsigned char data_length = 0;
+
 
 void lcd_init(char pins, char rows, char dots) {
     /* Set the parameters according to the LCD driver */
@@ -35,18 +40,32 @@ void lcd_init(char pins, char rows, char dots) {
     /* The busy state after initializing the LCD lasts for 15ms, so 20ms is used to ensure unexpected errors */
     __delay_ms(20);
     /* The following commands are defined in the LCD driver HD44780 for the properly initialization */
-    lcd_command(LCD_START(data_length, display_rows, dot_format));
-    __delay_ms(5);
-    lcd_command(LCD_START(data_length, display_rows, dot_format));
-    __delay_us(200);
-    lcd_command(LCD_START(data_length, display_rows, dot_format));
+    if (data_length == DATA_LENGTH_8_PINS) {
+        lcd_command(LCD_START(data_length, display_rows, dot_format));
+        __delay_ms(5);
+        lcd_command(LCD_START(data_length, display_rows, dot_format));
+        __delay_us(200);
+        lcd_command(LCD_START(data_length, display_rows, dot_format));
+    }
+    else {
+        lcd_send_nibble(0x30);
+        __delay_ms(5);
+        lcd_send_nibble(0x30);
+        __delay_us(200);
+        lcd_send_nibble(0x30);
+        __delay_us(200);
+        lcd_send_nibble(0x20); // Entra em modo 4 bits
+        __delay_us(200);
 
+        lcd_command(LCD_START(data_length, display_rows, dot_format));
+    }
     lcd_command(LCD_DISPLAY_OFF);
     lcd_command(LCD_CLEAR);
     __delay_ms(2);
     lcd_command(LCD_SET_ENTRY_MOD);
     lcd_command(LCD_DISPLAY_ON_CURSOR_ON);
 }
+
 
 /*
  * @description:    Clear the LCD current data displayed
@@ -56,12 +75,14 @@ void lcd_clear(void) {
     __delay_ms(2);
 }
 
+
 /*
  * @description:    Turns on the cursor
  */
 void lcd_cursor_on(void) {
     lcd_command(LCD_DISPLAY_ON_CURSOR_ON);
 }
+
 
 /*
  * @description:    Turns off the cursor
@@ -70,6 +91,7 @@ void lcd_cursor_off(void) {
     lcd_command(LCD_DISPLAY_ON_CURSOR_OFF);
 }
 
+
 /*
  * @description:    Turns on the cursor blink
  */
@@ -77,12 +99,14 @@ void lcd_cursor_blink_on(void) {
     lcd_command(LCD_DISPLAY_ON_CURSOR_BLINK);
 }
 
+
 /*
  * @description:    Turns off the cursor blink
  */
 void lcd_cursor_blink_off(void) {
-    lcd_command(LCD_DISPLAY_ON_CURSOR_ON);
+    lcd_command(LCD_DISPLAY_ON_CURSOR_OFF);
 }
+
 
 /*
  * @description:    Shift the cursor to the left by amount characters. Must be aware to move inside the LCD boundaries
@@ -93,6 +117,7 @@ void shift_cursor_left(int amount) {
         lcd_command(LCD_CURSOR_LEFT);
 }
 
+
 /*
  * @description:    Shift the cursor to the right by amount characters. Must be aware to move inside the LCD boundaries
  * @params:         (int) amount            Amount of characters to be shifted to the right
@@ -101,6 +126,7 @@ void shift_cursor_right(int amount) {
     while (amount--)
         lcd_command(LCD_CURSOR_RIGHT);
 }
+
 
 /*
  * @description:    Set position on LCD. Restricted to the LCD boundaries
@@ -118,6 +144,7 @@ void lcd_set_position(int row, int column) {
     lcd_command((unsigned char) display_position);
 }
 
+
 /*
  * @description:    Send a string to the LCD, starting from its current position
  * @params :        (char*) str             String to be sent to the display
@@ -131,6 +158,7 @@ int lcd_write_str(char *str) {
     return idx;
 }
 
+
 /*
  * @description:    Send a character to the LCD
  * @params :        (unsigned char) ch      Character to be sent to the display
@@ -141,6 +169,7 @@ int lcd_write_char(unsigned char ch) {
     lcd_send_data(ch);
     return ch;
 }
+
 
 /*
  * @description:    Send an integer to the display. Be aware of this function usage, as it consumes more memory in
@@ -156,6 +185,7 @@ int lcd_write_int(int integer) {
     return integer;
 }
 
+
 /*
  * @description:    Execute a command from LCD's internal functions. RS pin must be 0 when the byte is sent. This
  * function must not be used outside this file
@@ -167,6 +197,7 @@ static void lcd_command(unsigned char byte) {
     lcd_send_data(byte);
 }
 
+
 /*
  * @description:    Send a data byte to the LCD on the current position. RS pin must be 1 when the byte is sent. * This function must not be used outside this file
  * @params :        (unsigned char) byte    Data to be sent to the display or to execute a command
@@ -177,7 +208,8 @@ static void lcd_send_data(unsigned char byte) {
         LCD_EN = 1;
         __delay_us(40);
         LCD_EN = 0;
-    } else {
+    }
+    else {
         LCD_DATA_PORT = byte & 0xF0;
         LCD_EN = 1;
         __delay_us(40);
@@ -188,4 +220,12 @@ static void lcd_send_data(unsigned char byte) {
         __delay_us(40);
         LCD_EN = 0;
     }
+}
+
+
+static void lcd_send_nibble(unsigned char nibble) {
+    LCD_DATA_PORT = nibble & 0xF0;
+    LCD_EN = 1;
+    __delay_us(40);
+    LCD_EN = 0;
 }
